@@ -26,7 +26,7 @@ ES_INDEX_STRUCTURE = {
                         'russian_stop',
                         'russian_stemmer',
                     ],
-                }
+                },
             },
         },
     },
@@ -74,7 +74,19 @@ SELECT_PERSONS_GENRES_FILM_WORKS_BY_MOVIES = (
 )
 SELECT_MOVIES_WITH_NO_PERSONS = 'movies_with_no_persons_select'
 
-LAST_MODIFIED_DATA = datetime(2009, 10, 5, 18, 00)
+VERY_OLD_YEAR = 2009
+VERY_OLD_MONTH = 10
+VERY_OLD_DAY = 5
+VERY_OLD_HOUR = 18
+VERY_OLD_MINUTE = 0
+
+LAST_MODIFIED_DATA = datetime(
+    VERY_OLD_YEAR,
+    VERY_OLD_MONTH,
+    VERY_OLD_DAY,
+    VERY_OLD_HOUR,
+    VERY_OLD_MINUTE,
+)
 
 STATE_JSON_FILE_NAME = 'state.json'
 STATE_JSON_KEY = 'last_sync'

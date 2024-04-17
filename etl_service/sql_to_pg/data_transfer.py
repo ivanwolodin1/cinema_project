@@ -13,12 +13,12 @@ class DataTransfer:
             res = []
             temp = {}
             with open_sqlite_connection() as cursor:
-                cursor.execute(
-                    'SELECT * FROM {0} ORDER BY {1};'.format(
-                        db_dataclass.get('sqlite_table'),
-                        db_dataclass.get('order_by'),
-                    ),
+                query = 'SELECT * FROM {} ORDER BY {};'.format(
+                    db_dataclass.get('sqlite_table'),
+                    db_dataclass.get('order_by'),
                 )
+
+                cursor.execute(query)
 
                 while chunks := cursor.fetchmany(self._chunk_size):
                     if not chunks:
@@ -37,14 +37,14 @@ class DataTransfer:
                         {
                             'res': res,
                             'postgres_table': db_dataclass.get(
-                                'postgres_table'
+                                'postgres_table',
                             ),
                             'ordered_keys': db_dataclass.get('ordered_keys'),
                             'string_pattern': db_dataclass.get(
-                                'string_pattern'
+                                'string_pattern',
                             ),
                             'postgres_sql_upsert': db_dataclass.get(
-                                'postgres_sql_upsert'
+                                'postgres_sql_upsert',
                             ),
                         },
                     )

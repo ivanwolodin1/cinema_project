@@ -1,11 +1,7 @@
 import logging
 
-from constants import (
-    ETL_LOG_FILENAME,
-    LOGGER_NAME,
-    LOGGER_ENCODING,
-    LOGGER_FORMAT,
-)
+from constants import (ETL_LOG_FILENAME, LOGGER_ENCODING, LOGGER_FORMAT,
+                       LOGGER_NAME)
 
 logging.basicConfig(
     filename=ETL_LOG_FILENAME,

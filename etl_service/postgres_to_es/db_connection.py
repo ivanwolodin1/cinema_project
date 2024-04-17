@@ -1,9 +1,8 @@
-import psycopg2
-
 from contextlib import contextmanager
-from psycopg2.extras import DictCursor
 
+import psycopg2
 from constants import dsl
+from psycopg2.extras import DictCursor
 
 
 @contextmanager

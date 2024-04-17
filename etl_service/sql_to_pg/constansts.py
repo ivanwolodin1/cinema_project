@@ -1,12 +1,6 @@
 from dataclasses import fields
 
-from models import (
-    FilmWork,
-    Genre,
-    GenreFilmWork,
-    Person,
-    PersonFilmWork,
-)
+from models import FilmWork, Genre, GenreFilmWork, Person, PersonFilmWork
 
 db_dataclasses_structure = (
     {
@@ -24,7 +18,7 @@ db_dataclasses_structure = (
                                  type,
                                  created,
                                  modified
-                                ) 
+                                )
                                 VALUES {0}
                                 ON CONFLICT (id) DO NOTHING""",
         'string_pattern': '(%s, %s, %s, %s, %s, %s, %s, %s)',
@@ -47,12 +41,12 @@ db_dataclasses_structure = (
         'postgres_table': 'genre',
         'postgres_sql_upsert': """
                                 INSERT INTO content.genre (
-                                 id, 
-                                 name, 
+                                 id,
+                                 name,
                                  description,
-                                 created, 
+                                 created,
                                  modified
-                                ) 
+                                )
                                 VALUES {}
                                 ON CONFLICT (id) DO NOTHING """,
         'string_pattern': '(%s, %s, %s, %s, %s)',
@@ -72,11 +66,11 @@ db_dataclasses_structure = (
         'postgres_table': 'person',
         'postgres_sql_upsert': """
                                 INSERT INTO content.person (
-                                 id, 
-                                 full_name, 
-                                 created, 
+                                 id,
+                                 full_name,
+                                 created,
                                  modified
-                                ) 
+                                )
                                 VALUES {}
                                 ON CONFLICT (id) DO NOTHING """,
         'string_pattern': '(%s, %s, %s, %s)',
@@ -95,11 +89,11 @@ db_dataclasses_structure = (
         'postgres_table': 'genre_film_work',
         'postgres_sql_upsert': """
                                 INSERT INTO content.genre_film_work (
-                                 id, 
-                                 genre_id, 
+                                 id,
+                                 genre_id,
                                  film_work_id,
                                  created
-                                ) 
+                                )
                                 VALUES {}
                                 ON CONFLICT (id) DO NOTHING """,
         'string_pattern': '(%s, %s, %s, %s)',
@@ -118,12 +112,12 @@ db_dataclasses_structure = (
         'postgres_table': 'person_film_work',
         'postgres_sql_upsert': """
                                 INSERT INTO content.person_film_work (
-                                 id, 
-                                 film_work_id, 
+                                 id,
+                                 film_work_id,
                                  person_id,
-                                 created, 
+                                 created,
                                  role
-                                ) 
+                                )
                                 VALUES {}
                                 ON CONFLICT (id) DO NOTHING """,
         'string_pattern': '(%s, %s, %s, %s, %s)',

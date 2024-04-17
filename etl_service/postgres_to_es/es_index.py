@@ -1,7 +1,7 @@
-from logger import logger
-from constants import ES_INDEX_STRUCTURE, ES_INDEX_NAME
-from es_connection import open_elasticsearch_connection
 from backoff import backoff
+from constants import ES_INDEX_NAME, ES_INDEX_STRUCTURE
+from es_connection import open_elasticsearch_connection
+from logger import logger
 
 
 @backoff()

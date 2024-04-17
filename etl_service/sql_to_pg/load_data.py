@@ -3,7 +3,7 @@ from logger import logger
 
 
 def load_from_sqlite():
-    """Основной метод загрузки данных из SQLite в Postgres"""
+    """Основной метод загрузки данных из SQLite в Postgres."""
     data_transfer_obj = DataTransfer()
     data_transfer_obj.transfer_data()
 

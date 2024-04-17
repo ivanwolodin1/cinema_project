@@ -1,24 +1,18 @@
 import uuid
-
-from backoff import backoff
-from db_connection import open_postgres_connection
-from elasticsearch import helpers
-
-from logger import logger
-from constants import (
-    SELECT_PERSONS,
-    SELECT_MOVIES_BY_PERSONS,
-    SELECT_PERSONS_GENRES_FILM_WORKS_BY_MOVIES,
-    SELECT_MOVIES_WITH_NO_PERSONS,
-    LAST_MODIFIED_DATA,
-    STATE_JSON_KEY,
-)
-from es_connection import open_elasticsearch_connection
-from state_worker import state
-from sql import sql_selects
-
 from collections import defaultdict
 from datetime import datetime
+
+from backoff import backoff
+from constants import (LAST_MODIFIED_DATA, SELECT_MOVIES_BY_PERSONS,
+                       SELECT_MOVIES_WITH_NO_PERSONS, SELECT_PERSONS,
+                       SELECT_PERSONS_GENRES_FILM_WORKS_BY_MOVIES,
+                       STATE_JSON_KEY)
+from db_connection import open_postgres_connection
+from elasticsearch import helpers
+from es_connection import open_elasticsearch_connection
+from logger import logger
+from sql import sql_selects
+from state_worker import state
 
 
 class ETL:
@@ -35,7 +29,7 @@ class ETL:
     class Extractor:
         def __init__(self) -> None:
             self._person_ids: list[uuid.UUID] = []
-            self._movies_ids: list[uuid.UUID] = []
+            self._movies_ids: set[uuid.UUID]
             self._last_modified_person: datetime
 
         @backoff()
@@ -43,20 +37,17 @@ class ETL:
             with open_postgres_connection() as pg_cursor:
                 try:
                     if state.get_state(STATE_JSON_KEY) is None:
-                        self._last_modified_person: datetime = (
-                            LAST_MODIFIED_DATA
-                        )
+                        self._last_modified_person = LAST_MODIFIED_DATA
+
                     else:
-                        self._last_modified_person: datetime = (
-                            datetime.fromisoformat(
-                                state.get_state(STATE_JSON_KEY)
+                        self._last_modified_person = datetime.fromisoformat(
+                                state.get_state(STATE_JSON_KEY),
                             )
-                        )
 
                     pg_cursor.execute(
                         sql_selects.get(SELECT_PERSONS).format(
-                            self._last_modified_person
-                        )
+                            self._last_modified_person,
+                        ),
                     )
                     persons = pg_cursor.fetchall()
                     if not persons:
@@ -69,8 +60,8 @@ class ETL:
                         persons[len(persons) - 1][1].isoformat(),
                     )
 
-                except Exception as e:
-                    logger.error(f'Cannot get person ids {e}')
+                except Exception as error:
+                    logger.error(f'Cannot get person ids {error}')
 
         @backoff()
         def _get_movies_ids(self) -> None:
@@ -78,41 +69,41 @@ class ETL:
                 try:
                     if not self._person_ids:
                         pg_cursor.execute(
-                            sql_selects.get(SELECT_MOVIES_WITH_NO_PERSONS)
+                            sql_selects.get(SELECT_MOVIES_WITH_NO_PERSONS),
                         )
                     else:
                         pg_cursor.execute(
                             sql_selects.get(SELECT_MOVIES_BY_PERSONS).format(
-                                tuple(set(self._person_ids))
-                            )
+                                tuple(set(self._person_ids)),
+                            ),
                         )
                     movies_ids = pg_cursor.fetchall()
 
                     self._movies_ids = set(
-                        [movie_id[0] for movie_id in movies_ids]
+                        [movie_id[0] for movie_id in movies_ids],
                     )
 
-                except Exception as e:
-                    logger.error(f'Cannot get movies ids {e}')
+                except Exception as error:
+                    logger.error(f'Cannot get movies ids {error}')
 
         @backoff()
-        def _get_merged_data(self) -> list[tuple]:
+        def _get_merged_data(self):
             with open_postgres_connection() as pg_cursor:
                 try:
                     if not self._movies_ids:
                         return []
                     pg_cursor.execute(
                         sql_selects.get(
-                            SELECT_PERSONS_GENRES_FILM_WORKS_BY_MOVIES
+                            SELECT_PERSONS_GENRES_FILM_WORKS_BY_MOVIES,
                         ).format(
                             tuple(self._movies_ids),
-                        )
+                        ),
                     )
-                    data = pg_cursor.fetchall()
-                    return data
 
-                except Exception as e:
-                    logger.error(f'Cannot merge data {e}')
+                    return pg_cursor.fetchall()
+
+                except Exception as error:
+                    logger.error(f'Cannot merge data {error}')
 
         def collect_data(self) -> list[tuple]:
             self._get_persons_ids()
@@ -125,7 +116,7 @@ class ETL:
             self._how_many_inserted: int = 0
 
         def _clear_aux_data(self) -> None:
-            self._aux_dict = defaultdict(
+            self._aux_dict: defaultdict = defaultdict(
                 lambda: {
                     'imdb_rating': '',
                     'genre': '',
@@ -136,14 +127,14 @@ class ETL:
                     'writers_names': [],
                     'writers': [],
                     'director': '',
-                }
+                },
             )
 
-        def transform_data(self, data: list) -> list:
-            if not data:
+        def transform_data(self, extracted_data: list) -> list:
+            if not extracted_data:
                 return []
 
-            for row in data:
+            for row in extracted_data:
                 if self._aux_dict.get(row['fw_id']) is None:
                     self._aux_dict[row['fw_id']]['imdb_rating'] = row['rating']
                     self._aux_dict[row['fw_id']]['genre'] = row['name']
@@ -158,10 +149,10 @@ class ETL:
                     not in self._aux_dict[row['fw_id']]['actors_names']
                 ):
                     self._aux_dict[row['fw_id']]['actors_names'].append(
-                        row['full_name']
+                        row['full_name'],
                     )
                     self._aux_dict[row['fw_id']]['actors'].append(
-                        {'id': row['id'], 'name': row['full_name']}
+                        {'id': row['id'], 'name': row['full_name']},
                     )
                 if (
                     row['role'] == 'writer'
@@ -169,10 +160,10 @@ class ETL:
                     not in self._aux_dict[row['fw_id']]['writers_names']
                 ):
                     self._aux_dict[row['fw_id']]['writers_names'].append(
-                        row['full_name']
+                        row['full_name'],
                     )
                     self._aux_dict[row['fw_id']]['writers'].append(
-                        {'id': row['id'], 'name': row['full_name']}
+                        {'id': row['id'], 'name': row['full_name']},
                     )
                 if (
                     row['role'] == 'director'
@@ -182,18 +173,18 @@ class ETL:
                     self._aux_dict[row['fw_id']]['director'] = row['full_name']
 
             chunk = []
-            for k, v in self._aux_dict.items():
+            for key, movie_data in self._aux_dict.items():
                 filmwork = {
-                    'id': k,
-                    'imdb_rating': v['imdb_rating'],
-                    'genre': v['genre'],
-                    'title': v['title'],
-                    'description': v['description'],
-                    'director': v['director'],
-                    'actors_names': v['actors_names'],
-                    'writers_names': v['writers_names'],
-                    'actors': v['actors'],
-                    'writers': v['writers'],
+                    'id': key,
+                    'imdb_rating': movie_data['imdb_rating'],
+                    'genre': movie_data['genre'],
+                    'title': movie_data['title'],
+                    'description': movie_data['description'],
+                    'director': movie_data['director'],
+                    'actors_names': movie_data['actors_names'],
+                    'writers_names': movie_data['writers_names'],
+                    'actors': movie_data['actors'],
+                    'writers': movie_data['writers'],
                 }
                 chunk.append(filmwork)
 
@@ -204,8 +195,8 @@ class ETL:
 
     class Loader:
         @backoff()
-        def load_to_es(self, data) -> None:
-            if not data:
+        def load_to_es(self, transformed_data) -> None:
+            if not transformed_data:
                 return
             actions = [
                 {
@@ -213,7 +204,7 @@ class ETL:
                     '_id': row['id'],
                     '_source': row,
                 }
-                for row in data
+                for row in transformed_data
             ]
             with open_elasticsearch_connection() as es:
                 res = helpers.bulk(es, actions)

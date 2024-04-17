@@ -1,7 +1,7 @@
 import abc
-from typing import Any
-import os
 import json
+import os
+from typing import Any
 
 from constants import STATE_JSON_FILE_NAME
 from logger import logger
@@ -48,8 +48,8 @@ class JsonFileStorage(BaseStorage):
             with open(self.file_path, 'r+') as json_file:
                 try:
                     self.json_object = json.load(json_file)
-                except Exception as e:
-                    print(e)
+                except Exception as error:
+                    print(error)
         else:
             logger.info('State JSON file does not exist!')
         return self.json_object
@@ -69,9 +69,9 @@ class State:
     @state.setter
     def state(self, key_value_tuple: tuple[str, str]):
         """Сеттер для установки состояния."""
-        key, value = key_value_tuple
+        key, state_value = key_value_tuple
         state_dict = self.storage.retrieve_state()
-        state_dict[key] = value
+        state_dict[key] = state_value
         self.storage.save_state(state_dict)
 
     def get_state(self, key: str) -> str | None:

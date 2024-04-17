@@ -2,8 +2,8 @@ import time
 from functools import wraps
 from typing import Iterable
 
-from logger import logger
 from constants import EXCEPTION_ON_EXCEEDING_TRIES_LIMIT
+from logger import logger
 
 
 def backoff(
@@ -13,7 +13,8 @@ def backoff(
     exceptions: Iterable = (Exception,),
     max_attempts: int = 10,
 ):
-    """
+    """Функция, дающая сервисам передышку.
+
     Функция для повторного выполнения функции через некоторое время, если возникла ошибка.
     Использует наивный экспоненциальный рост времени повтора (factor)
     до граничного времени ожидания (border_sleep_time)
@@ -34,14 +35,17 @@ def backoff(
         def inner(*args, **kwargs):
             tries = 0
             while tries < max_attempts:
-                t = min(border_sleep_time, start_sleep_time * factor**tries)
+                timer = min(
+                    border_sleep_time,
+                    start_sleep_time * factor**tries,
+                )
                 if tries > 0:
-                    time.sleep(t)
+                    time.sleep(timer)
                 try:
                     return func(*args, **kwargs)
-                except exceptions as e:
+                except exceptions as error:
                     tries += 1
-                    logger.error(f'Backoff is working! {str(e)}')
+                    logger.error(f'Backoff is working! {str(error)}')
             logger.error(EXCEPTION_ON_EXCEEDING_TRIES_LIMIT)
             raise Exception(EXCEPTION_ON_EXCEEDING_TRIES_LIMIT)
 

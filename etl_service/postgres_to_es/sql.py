@@ -1,9 +1,6 @@
-from constants import (
-    SELECT_PERSONS,
-    SELECT_MOVIES_BY_PERSONS,
-    SELECT_PERSONS_GENRES_FILM_WORKS_BY_MOVIES,
-    SELECT_MOVIES_WITH_NO_PERSONS,
-)
+from constants import (SELECT_MOVIES_BY_PERSONS, SELECT_MOVIES_WITH_NO_PERSONS,
+                       SELECT_PERSONS,
+                       SELECT_PERSONS_GENRES_FILM_WORKS_BY_MOVIES)
 
 sql_selects = {
     SELECT_PERSONS: """
@@ -45,7 +42,7 @@ sql_selects = {
                                     ON gfw.film_work_id = fw.id
                             LEFT JOIN content.genre g
                                     ON g.id = gfw.genre_id
-                            WHERE fw.id IN {} ; 
+                            WHERE fw.id IN {} ;
                             """,
     SELECT_MOVIES_WITH_NO_PERSONS: """
                             SELECT fw.id, fw.modified

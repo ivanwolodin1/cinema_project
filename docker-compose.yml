@@ -22,7 +22,7 @@ services:
     - ./etl_service/dbvars_example.env
 
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.0
+    image: elasticsearch:8.10.2
     container_name: elasticsearch
     environment:
       - discovery.type=single-node

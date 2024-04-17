@@ -1,13 +1,11 @@
 import os
+import sqlite3
+from contextlib import contextmanager
 
 import psycopg2
-import sqlite3
-
-from contextlib import contextmanager
-from psycopg2.extras import DictCursor
 from dotenv import load_dotenv
-
 from logger import logger
+from psycopg2.extras import DictCursor
 
 load_dotenv()
 
@@ -21,8 +19,8 @@ dsl = {
 
 
 def get_db_path():
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(BASE_DIR, 'db.sqlite')
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_dir, 'db.sqlite')
 
 
 @contextmanager
