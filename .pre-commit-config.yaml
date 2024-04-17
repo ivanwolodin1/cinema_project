@@ -1,0 +1,12 @@
+repos:
+-   repo: https://github.com/ivanwolodin/graduate_work/
+    hooks:
+    -   id: flake8
+        name: flake8
+        description: wemake-python-styleguide enforcement
+        entry: flake8
+        args: ["--core=setup.cfg"]
+        language: python
+        types: [python]
+    -   id: mypy
+        args: ["--core=mypy.ini"]
