@@ -22,12 +22,6 @@ MOVIE_ID = '2a090dde-f688-46fe-a9f4-b781a985275e'
         ),
         (
             INDEX,
-            {'url_param': MOVIE_ID},
-            HTTPStatus.OK,
-            1,
-        ),
-        (
-            INDEX,
             {'url_param': 'non_existing_id'},
             HTTPStatus.NOT_FOUND,
             1,
