@@ -51,6 +51,18 @@ services:
     depends_on:
       - etl_es
 
+  nginx:
+    image: nginx
+    container_name: nginx
+    depends_on:
+      - async_api_service
+      - redis_async_api
+      - etl
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./tmp/logs/nginx/:/var/log/nginx/
+
 #  tests_async_api:
 #    build: async_api_service/tests/
 #    env_file:
