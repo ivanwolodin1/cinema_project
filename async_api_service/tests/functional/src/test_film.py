@@ -8,7 +8,7 @@ from tests.functional.utils.perform_test import perform_test
 
 INDEX = test_settings.es_index_movies
 TEST_DATA = utility_functions_by_index[INDEX].get('data_gen_function')()
-MOVIE_ID = TEST_DATA[0]['id']
+MOVIE_ID = '2a090dde-f688-46fe-a9f4-b781a985275e'
 
 
 @pytest.mark.parametrize(

@@ -63,12 +63,12 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./tmp/logs/nginx/:/var/log/nginx/
 
-#  tests_async_api:
-#    build: async_api_service/tests/
-#    env_file:
-#      - async_api_service/test_example.env
-#    depends_on:
-#      etl_es:
-#        condition: service_healthy
-#      redis_async_api:
-#        condition: service_healthy
+  tests_async_api:
+    build: async_api_service/tests/
+    env_file:
+      - async_api_service/test_example.env
+    depends_on:
+      etl_es:
+        condition: service_healthy
+      redis_async_api:
+        condition: service_healthy

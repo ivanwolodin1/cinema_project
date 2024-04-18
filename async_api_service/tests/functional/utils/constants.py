@@ -2,7 +2,7 @@ DOCS_NUMBER = 50
 GENRES_NUMBER = 10
 PERSON_NUMBER = 10
 
-MOVIE_TITLE_TO_SEARCH = 'matrix'
+MOVIE_TITLE_TO_SEARCH = 'Bucky Larson: Born to Be a Star'
 NONEXISTENT_SEARCH = 'sjdkangfakdfjngsdfg'
 
 GENRE_PERSON_TO_SEARCH = 'Tarantino'

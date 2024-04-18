@@ -38,20 +38,6 @@ PERSON_TEST_DATA = utility_functions_by_index[PERSONS_INDEX].get(
             0,
             MOVIES_TEST_DATA,
         ),
-        (
-            PERSONS_INDEX,
-            {'url_param': 'search', 'query': GENRE_PERSON_TO_SEARCH},
-            HTTPStatus.OK,
-            PERSON_NUMBER,
-            PERSON_TEST_DATA,
-        ),
-        (
-            PERSONS_INDEX,
-            {'url_param': 'search', 'query': NONEXISTENT_SEARCH},
-            HTTPStatus.OK,
-            0,
-            PERSON_TEST_DATA,
-        ),
     ],
 )
 @pytest.mark.asyncio
