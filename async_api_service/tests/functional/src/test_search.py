@@ -57,7 +57,6 @@ PERSON_TEST_DATA = utility_functions_by_index[PERSONS_INDEX].get(
 @pytest.mark.asyncio
 async def test_search(
     aiohttp_client_session,
-    es_write_data,
     index,
     query,
     expected_status,
@@ -65,7 +64,6 @@ async def test_search(
     test_data,
 ):
     await perform_test(
-        es_write_data,
         aiohttp_client_session,
         index,
         query,

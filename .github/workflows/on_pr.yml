@@ -18,11 +18,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pytest
-          pip install -r async_api_service/requirements.txt
+          pip install -r async_api_service/tests/functional/requirements.txt
           pip install -r auth_service/requirements.txt
           pip install -r ugc_service/requirements.txt
       - name: Run tests
         run: |
-          pytest async_api_service/tests/test_empty.py
+          pytest async_api_service/tests/
           pytest auth_service/tests
           pytest ugc_service/tests

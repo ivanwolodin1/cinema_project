@@ -37,14 +37,12 @@ MOVIE_ID = TEST_DATA[0]['id']
 @pytest.mark.asyncio
 async def test_films(
     aiohttp_client_session,
-    es_write_data,
     index,
     film_id,
     expected_status,
     expected_length,
 ):
     await perform_test(
-        es_write_data,
         aiohttp_client_session,
         index,
         film_id,

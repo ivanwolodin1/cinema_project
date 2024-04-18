@@ -20,14 +20,12 @@ PERSON_ID = TEST_DATA[0]['id']
 @pytest.mark.asyncio
 async def test_person(
     aiohttp_client_session,
-    es_write_data,
     index,
     query,
     expected_status,
     expected_length,
 ):
     await perform_test(
-        es_write_data,
         aiohttp_client_session,
         index,
         query,
