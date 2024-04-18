@@ -1,15 +1,16 @@
 version: "3.8"
 services:
-  transporter:
+  etl_transporter:
     build: ./etl_service/sql_to_pg/
     container_name: transporter
     env_file:
     - ./etl_service/webvars_example.env
     depends_on:
-      - db
-  db:
+      - etl_db
+
+  etl_db:
     build: ./etl_service/database/
-    container_name: db
+    container_name: etl_db
     env_file:
     - ./etl_service/dbvars_example.env
   
@@ -17,13 +18,13 @@ services:
     build: ./etl_service/postgres_to_es
     container_name: etl
     depends_on:
-      - es
+      - etl_es
     env_file:
     - ./etl_service/dbvars_example.env
 
-  es:
+  etl_es:
     image: elasticsearch:8.10.2
-    container_name: elasticsearch
+    container_name: etl_elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -32,3 +33,30 @@ services:
       interval: 15s
       timeout: 15s
       retries: 3
+
+  redis_async_api:
+    image: redis:7.0.7
+    container_name: redis_async_api
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  async_api_service:
+    container_name: asyncapi
+    restart: always
+    build: async_api_service/
+    depends_on:
+      - etl_es
+
+#  tests_async_api:
+#    build: async_api_service/tests/
+#    env_file:
+#      - async_api_service/test_example.env
+#    depends_on:
+#      etl_es:
+#        condition: service_healthy
+#      redis_async_api:
+#        condition: service_healthy

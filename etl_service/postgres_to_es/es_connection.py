@@ -9,7 +9,7 @@ TIMEOUT = 300
 @contextmanager
 def open_elasticsearch_connection():
     with Elasticsearch(
-        hosts=f'http://elasticsearch:{ES_PORT}/',
+        hosts=f'http://etl_elasticsearch:{ES_PORT}/',
         request_timeout=TIMEOUT,
         max_retries=10,
         retry_on_timeout=True,

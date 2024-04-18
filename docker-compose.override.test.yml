@@ -1,7 +1,20 @@
 version: "3.8"
 services:
-  es:
+
+  etl_es:
     expose:
       - "9200"
     ports:
       - "9200:9200"
+
+  async_api_service:
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+
+  redis_async_api:
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
