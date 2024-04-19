@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+  etl_transporter:
+    build: ./etl_service/sql_to_pg/
+    container_name: transporter
+    env_file:
+    - ./etl_service/webvars_example.env
+    depends_on:
+      - etl_db
+
+  etl_db:
+    build: ./etl_service/database/
+    container_name: etl_db
+    env_file:
+    - ./etl_service/dbvars_example.env
+  
+  etl:
+    build: ./etl_service/postgres_to_es
+    container_name: etl
+    depends_on:
+      - etl_es
+    env_file:
+    - ./etl_service/dbvars_example.env
+
+  etl_es:
+    image: elasticsearch:8.10.2
+    container_name: etl_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 15s
+      timeout: 15s
+      retries: 3
+
+  redis_async_api:
+    image: redis:7.0.7
+    container_name: redis_async_api
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  async_api_service:
+    container_name: asyncapi
+    restart: always
+    build: async_api_service/
+    depends_on:
+      - etl_es
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    depends_on:
+      - async_api_service
+      - redis_async_api
+      - etl
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./tmp/logs/nginx/:/var/log/nginx/
+
+  tests_async_api:
+    build: async_api_service/tests/
+    env_file:
+      - async_api_service/test_example.env
+    depends_on:
+      etl_es:
+        condition: service_healthy
+      redis_async_api:
+        condition: service_healthy

@@ -9,4 +9,6 @@ repos:
         language: python
         types: [python]
     -   id: mypy
+        name: mypy
+        entry: mypy
         args: ["--core=mypy.ini"]
