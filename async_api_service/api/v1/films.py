@@ -2,8 +2,10 @@ from http import HTTPStatus
 
 from api.v1.models.api_film_models import Film, FilmBase
 from api.v1.utils.paginated_params import PaginatedParams
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from services.film_service import FilmService, get_film_service
+
+from core.auth_validator import auth_required
 
 router = APIRouter()
 
@@ -15,7 +17,9 @@ router = APIRouter()
     description='Список фильмов с пагинацией, фильтрацией по жанрам и сортировкой по году или рейтингу',
     response_description='Список фильмов с id, названием и рейтингом',
 )
+@auth_required
 async def get_films(
+    authorization_header: str = Header(None),
     paginated_params: PaginatedParams = Depends(),
     film_service: FilmService = Depends(get_film_service),
 ) -> list[FilmBase]:
@@ -64,8 +68,11 @@ async def search_films(
     description='Полная информация о фильме по ID',
     response_description='ID, название, описание, жанры, рейтинг, список участников',
 )
+@auth_required
 async def film_details(
-    film_id: str, film_service: FilmService = Depends(get_film_service),
+    authorization_header: str = Header(None),
+    film_id: str = '',
+    film_service: FilmService = Depends(get_film_service),
 ) -> Film:
     film = await film_service.get_by_id(index='movies', doc_id=film_id)
     if not film:

@@ -35,7 +35,7 @@ services:
       retries: 3
 
   auth_service:
-    container_name: auth_api
+    container_name: auth_service
     restart: always
     build: auth_service/auth_api/
     env_file:
