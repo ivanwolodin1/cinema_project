@@ -32,7 +32,7 @@ class AsyncPostgres(AsyncDb):
     # второй вопрос, можно ли не использовать asynccontextmanager??
     # если да, то как?
     @asynccontextmanager
-    async def get_session(self) -> AsyncSession:
+    async def get_session(self) -> AsyncSession:  # type: ignore
         session = self.async_session()
         try:
             yield session

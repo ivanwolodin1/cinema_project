@@ -30,7 +30,7 @@ class ProductionConfig(Config):
 
 
 def get_config() -> Config:
-    mode = os.getenv('PRODUCTION_MODE')
+    mode = os.getenv('PRODUCTION_MODE', '')
     if mode.lower() == 'true':
         return ProductionConfig()
     return DevelopmentConfig()
@@ -43,6 +43,6 @@ class Settings(BaseModel):
     authjwt_secret_key: str = os.getenv('SECRET_KEY', 'secretkey')
 
 
-@AuthJWT.load_config
-def get_config():
+@AuthJWT.load_config  # type: ignore
+def get_config():  # type: ignore
     return Settings()

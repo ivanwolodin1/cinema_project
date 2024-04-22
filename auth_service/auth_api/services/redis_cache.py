@@ -25,7 +25,7 @@ class RedisCacheSearcher(AsyncCacheSearcher):
         res = await self.redis.get(pickle.dumps(key))
         return pickle.loads(res) if res else None
 
-    async def set(self, key: str, value: str, expire: int, **kwargs):
+    async def set(self, key: str, value: str, expire: int, **kwargs):  # type: ignore
         return await self.redis.set(
             pickle.dumps(key), pickle.dumps(value), EXPIRATION_CACHE_TIME
         )

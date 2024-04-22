@@ -114,9 +114,9 @@ class UserCRUD(RegisterService):
 
         return upd_user
 
-    async def authenticate_user(
+    async def authenticate_user(  # type: ignore
         self, email: str, password: str
-    ) -> Optional[User]:
+    ) -> Optional[User]:  # type: ignore
         async with self.db.get_session() as session:
             query_user = select(User).filter(User.email == email)
             result_user = await session.execute(query_user)
