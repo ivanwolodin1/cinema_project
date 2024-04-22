@@ -2,21 +2,20 @@ from abc import ABC, abstractmethod
 from functools import lru_cache
 from typing import Optional
 
-from fastapi import Depends
-from passlib.hash import pbkdf2_sha256
-from sqlalchemy import select, update
-
 from core.exceptions import (
     DuplicateUserError,
     InvalidRoleError,
     UserAuthenticationError,
 )
 from core.utils import hash_password
+from fastapi import Depends
 from models.password import Password
 from models.role import Role
 from models.user import User
+from passlib.hash import pbkdf2_sha256
 from schemas.user import UserCreate
 from services.db_searcher import AsyncDb, get_db_searcher
+from sqlalchemy import select, update
 
 
 class RegisterService(ABC):
@@ -30,7 +29,7 @@ class RegisterService(ABC):
 
     @abstractmethod
     async def authenticate_user(
-            self, email: str, password: str
+        self, email: str, password: str
     ) -> Optional[User]:
         pass
 
@@ -68,7 +67,7 @@ class UserCRUD(RegisterService):
             return bool(result.scalar())
 
     async def create_user(
-            self, email: str, password: str, role_id: int = 1
+        self, email: str, password: str, role_id: int = 1
     ) -> User:
         if await self.check_if_user_exists(email):
             raise DuplicateUserError()
@@ -92,7 +91,7 @@ class UserCRUD(RegisterService):
         return new_user
 
     async def _update_user_password(
-            self, user_id: int, new_pass: str
+        self, user_id: int, new_pass: str
     ) -> Password:
         p_hash = hash_password(new_pass)
         async with self.db.get_session() as session:
@@ -105,7 +104,7 @@ class UserCRUD(RegisterService):
             await session.commit()
 
     async def update_user_email(
-            self, user_id: int, new_email: str, new_password: str
+        self, user_id: int, new_email: str, new_password: str
     ) -> User:
         if await self.check_if_user_exists(new_email):
             raise DuplicateUserError()
@@ -116,7 +115,7 @@ class UserCRUD(RegisterService):
         return upd_user
 
     async def authenticate_user(
-            self, email: str, password: str
+        self, email: str, password: str
     ) -> Optional[User]:
         async with self.db.get_session() as session:
             query_user = select(User).filter(User.email == email)
@@ -132,13 +131,13 @@ class UserCRUD(RegisterService):
             result_password = await session.execute(query_password)
             stored_password_hash = result_password.scalar()
             if stored_password_hash and pbkdf2_sha256.verify(
-                    password, stored_password_hash.password_hash
+                password, stored_password_hash.password_hash
             ):
                 return user
 
 
 @lru_cache()
 def get_register_service(
-        storage_searcher: AsyncDb = Depends(get_db_searcher),
+    storage_searcher: AsyncDb = Depends(get_db_searcher),
 ) -> UserCRUD:
     return UserCRUD(storage_searcher)

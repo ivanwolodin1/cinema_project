@@ -1,14 +1,13 @@
 import uuid
 from functools import lru_cache
-from typing import Optional, List
+from typing import List, Optional
 
+from core.exceptions import RoleAlreadyExist, RoleNotFound, UserNotFound
 from fastapi import Depends
-from sqlalchemy import select, delete, update
-
-from core.exceptions import RoleNotFound, UserNotFound, RoleAlreadyExist
 from models.role import Role
 from models.user import User
 from services.db_searcher import AsyncDb, get_db_searcher
+from sqlalchemy import delete, select, update
 
 
 class RoleService:
@@ -100,6 +99,6 @@ class RoleService:
 
 @lru_cache()
 def get_role_service(
-        storage_searcher: AsyncDb = Depends(get_db_searcher),
+    storage_searcher: AsyncDb = Depends(get_db_searcher),
 ) -> RoleService:
     return RoleService(storage_searcher)

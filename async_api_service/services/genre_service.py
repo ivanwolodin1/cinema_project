@@ -20,7 +20,8 @@ class GenreService:
     @cache_searcher()
     async def get_all(self):
         all_queries = await self.storage_searcher.search(
-            index=self.index, body=get_all_query,
+            index=self.index,
+            body=get_all_query,
         )
 
         return [

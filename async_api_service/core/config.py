@@ -18,5 +18,7 @@ ELASTIC_PORT = int(os.getenv('ELASTIC_PORT', DEFAULT_ES_PORT))
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-AUTH_ROUTE = (f"{os.getenv('AUTH_SERVICE_URL', 'http://auth_service')}:"
-              f"{os.getenv('AUTH_SERVICE_PORT', '8000')}/api/v1/auth/authenticate_user_route")
+AUTH_ROUTE = (
+    f"{os.getenv('AUTH_SERVICE_URL', 'http://auth_service')}:"
+    f"{os.getenv('AUTH_SERVICE_PORT', '8000')}/api/v1/auth/authenticate_user_route"
+)

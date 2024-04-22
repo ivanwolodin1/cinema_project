@@ -1,10 +1,8 @@
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Header
-
 from schemas.token import TokenResponse
-from schemas.user import UserAuthentication, UserCreate
-from schemas.user import UserResponse
+from schemas.user import UserAuthentication, UserCreate, UserResponse
 from services.register_service import UserCRUD, get_register_service
 from services.token_service import TokenManager, get_token_service
 
@@ -18,8 +16,8 @@ async def get():
 
 @router.post('/sign_up', response_model=UserResponse)
 async def sign_up(
-        user_data: UserCreate,
-        register_service: UserCRUD = Depends(get_register_service),
+    user_data: UserCreate,
+    register_service: UserCRUD = Depends(get_register_service),
 ):
     new_user = await register_service.create_user(
         email=user_data.email,
@@ -34,9 +32,9 @@ async def sign_up(
 
 @router.post('/sign_in', response_model=TokenResponse)
 async def sign_in(
-        user_data: UserAuthentication,
-        token_manager: TokenManager = Depends(get_token_service),
-        user_agent: Optional[str] = Header(None),
+    user_data: UserAuthentication,
+    token_manager: TokenManager = Depends(get_token_service),
+    user_agent: Optional[str] = Header(None),
 ):
     data = await token_manager.get_refresh_and_access_tokens(
         user_data.email, user_data.password

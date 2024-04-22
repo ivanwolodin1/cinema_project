@@ -1,12 +1,14 @@
 from http import HTTPStatus
 
 from core.constants import (
-    EXISTING_USER_ERROR,
-    NON_EXISTING_ROLE_ERROR,
     ACCESS_EXPIRATION_ERROR,
     AUTHENTICATION_ERROR,
+    EXISTING_USER_ERROR,
+    FORBIDDEN_FOR_ROLE_ERROR,
+    NO_SUCH_ROLE_ERROR,
+    NO_SUCH_USER_ERROR,
+    NON_EXISTING_ROLE_ERROR,
     TOKEN_ERROR,
-    FORBIDDEN_FOR_ROLE_ERROR, NO_SUCH_ROLE_ERROR, NO_SUCH_USER_ERROR,
 )
 
 
@@ -53,7 +55,6 @@ class UserNotFound(Exception):
 class RoleAlreadyExist(Exception):
     def __init__(self):
         super().__init__(NO_SUCH_USER_ERROR)
-
 
 
 exception_mappings = {

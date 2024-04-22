@@ -1,11 +1,10 @@
 import pickle
 from abc import ABC, abstractmethod
 
+from core.constants import EXPIRATION_CACHE_TIME
+from db_connectors.redis import get_redis
 from fastapi import Depends
 from redis.asyncio import Redis
-
-from core.constants import EXPIRATION_CACHE_TIME
-from db_сonnectors.redis import get_redis
 
 
 class AsyncCacheSearcher(ABC):
@@ -33,6 +32,6 @@ class RedisCacheSearcher(AsyncCacheSearcher):
 
 
 async def get_redis_cache_searcher(
-        redis: Redis = Depends(get_redis),
+    redis: Redis = Depends(get_redis),
 ) -> RedisCacheSearcher:
     return RedisCacheSearcher(redis)

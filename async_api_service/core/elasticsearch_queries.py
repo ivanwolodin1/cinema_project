@@ -12,7 +12,9 @@ def get_pop_movies_by_genre_query(genre_id):
 
 
 def get_search_movies_query(
-    search_query: str, page_number: int, page_size: int,
+    search_query: str,
+    page_number: int,
+    page_size: int,
 ):
     return {
         'query': {'match': {'title': search_query}},
@@ -77,7 +79,9 @@ def get_movies_by_person_id_query(person_id: str):
 
 
 def get_search_person_query(
-    search_query: str, page_number: int, page_size: int,
+    search_query: str,
+    page_number: int,
+    page_size: int,
 ):
     return {
         'query': {'match': {'name': search_query}},

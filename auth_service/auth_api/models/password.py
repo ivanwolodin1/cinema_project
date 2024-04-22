@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Index
-
 from models.base import Base
 from models.user import User
+from sqlalchemy import Column, ForeignKey, Index, Integer, String
 
 
 class Password(Base):

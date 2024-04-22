@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
-
 from models.base import Base
 from models.role import Role
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 
 class User(Base):

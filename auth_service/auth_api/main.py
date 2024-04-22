@@ -1,14 +1,12 @@
 import uvicorn
+from api.v1.account import protected_router as account_router
+from api.v1.auth import router as auth_router
+from core.config import config
+from core.middleware import handle_exceptions
+from db_connectors import redis
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from redis.asyncio import Redis
-
-from api.v1.account import protected_router as account_router
-from api.v1.auth import router as auth_router
-
-from core.config import config
-from core.middleware import handle_exceptions
-from db_сonnectors import redis
 
 app = FastAPI(
     title=config.PROJECT_NAME,
@@ -17,7 +15,7 @@ app = FastAPI(
     default_response_class=ORJSONResponse,
 )
 
-app.middleware("http")(handle_exceptions)
+app.middleware('http')(handle_exceptions)
 
 
 async def startup_event():

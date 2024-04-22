@@ -34,7 +34,9 @@ def es_write_data(es_client):
             await es_client.indices.delete(index=index)
         await es_client.indices.create(index=index, **index_structure)
         updated, errors = await async_bulk(
-            client=es_client, actions=bulk_query, refresh='wait_for',
+            client=es_client,
+            actions=bulk_query,
+            refresh='wait_for',
         )
         if errors:
             raise Exception(ES_SEARCH_ERROR)

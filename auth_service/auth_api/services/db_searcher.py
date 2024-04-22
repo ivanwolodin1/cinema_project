@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager
 
+from db_connectors.async_db import get_db
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from db_сonnectors.async_db import get_db
 
 
 class AsyncDb(ABC):
@@ -48,6 +47,6 @@ class AsyncPostgres(AsyncDb):
 
 
 async def get_db_searcher(
-        db: AsyncDb = Depends(get_db),
+    db: AsyncDb = Depends(get_db),
 ) -> AsyncPostgres:
     return AsyncPostgres(db)

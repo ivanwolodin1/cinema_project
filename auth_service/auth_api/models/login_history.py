@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Index, DateTime
-
 from models.base import Base
 from models.user import User
+from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, String
 
 
 class LoginHistory(Base):

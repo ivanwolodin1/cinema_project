@@ -5,30 +5,26 @@ from time import time
 from typing import Any, Dict, Optional
 
 from async_fastapi_jwt_auth import AuthJWT
-from fastapi import Depends
-from sqlalchemy import delete
-
 from core.constants import EXPIRATION_CACHE_TIME
 from core.exceptions import (
     AccessTokenExpired,
     InvalidTokenError,
     UserAuthenticationError,
 )
+from fastapi import Depends
 from models.login_history import LoginHistory
 from models.token import RefreshToken
 from schemas.token import AuthTokens
 from services.db_searcher import AsyncDb, get_db_searcher
-from services.redis_cache import (
-    AsyncCacheSearcher,
-    get_redis_cache_searcher,
-)
+from services.redis_cache import AsyncCacheSearcher, get_redis_cache_searcher
 from services.register_service import UserCRUD, get_register_service
+from sqlalchemy import delete
 
 
 class TokenManager:
     @abstractmethod
     async def get_refresh_and_access_tokens(
-            self, email: str, password: str
+        self, email: str, password: str
     ) -> Optional[AuthTokens]:
         pass
 
@@ -47,11 +43,11 @@ class TokenManager:
 
 class TokenService(TokenManager):
     def __init__(
-            self,
-            user_crud: UserCRUD,
-            authjwt: AuthJWT,
-            db: AsyncDb,
-            cacher: AsyncCacheSearcher,
+        self,
+        user_crud: UserCRUD,
+        authjwt: AuthJWT,
+        db: AsyncDb,
+        cacher: AsyncCacheSearcher,
     ) -> None:
         self.user_crud = user_crud
         self.authjwt = authjwt
@@ -71,7 +67,7 @@ class TokenService(TokenManager):
             session.add(login_history)
 
     async def get_refresh_and_access_tokens(
-            self, email: str, password: str
+        self, email: str, password: str
     ) -> Optional[AuthTokens]:
         user = await self.user_crud.authenticate_user(email, password)
         if not user:
@@ -122,9 +118,9 @@ class TokenService(TokenManager):
 
 @lru_cache()
 def get_token_service(
-        user_crud: UserCRUD = Depends(get_register_service),
-        authjwt: AuthJWT = Depends(),
-        storage_searcher: AsyncDb = Depends(get_db_searcher),
-        redis: AsyncCacheSearcher = Depends(get_redis_cache_searcher),
+    user_crud: UserCRUD = Depends(get_register_service),
+    authjwt: AuthJWT = Depends(),
+    storage_searcher: AsyncDb = Depends(get_db_searcher),
+    redis: AsyncCacheSearcher = Depends(get_redis_cache_searcher),
 ) -> TokenService:
     return TokenService(user_crud, authjwt, storage_searcher, redis)

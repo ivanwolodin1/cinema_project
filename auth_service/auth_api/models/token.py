@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Index
-from sqlalchemy.sql import func
-
 from models.base import Base
 from models.user import User
+from sqlalchemy import Column, DateTime, ForeignKey, Index, Integer, String
+from sqlalchemy.sql import func
 
 
 class RefreshToken(Base):
