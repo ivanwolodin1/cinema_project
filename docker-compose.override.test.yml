@@ -18,3 +18,9 @@ services:
       - "6379"
     ports:
       - "6379:6379"
+
+  auth_service:
+    expose:
+      - "8000"
+    ports:
+      - "8001:8000"

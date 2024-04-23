@@ -40,7 +40,8 @@ class FilmService:
     @cache_searcher()
     async def get_films_by_person(self, person_id):
         movies = await self.storage_searcher.search(
-            index=self.index, body=get_movies_by_person_id_query(person_id),
+            index=self.index,
+            body=get_movies_by_person_id_query(person_id),
         )
 
         return [
@@ -71,7 +72,8 @@ class FilmService:
     @cache_searcher()
     async def get_popular_movies_in_genre(self, genre_id: str):
         response = await self.storage_searcher.search(
-            index=self.index, body=get_pop_movies_by_genre_query(genre_id),
+            index=self.index,
+            body=get_pop_movies_by_genre_query(genre_id),
         )
         return [
             {
