@@ -88,6 +88,10 @@ class FilmService:
     async def get_by_id(self, index, doc_id):
         return await self.storage_searcher.get_by_id(index, doc_id)
 
+    @cache_searcher()
+    async def get_movies_interception(self, index, movies: list[str]):
+        return await self.storage_searcher.get_interception(index, movies)
+
 
 @lru_cache()
 def get_film_service(

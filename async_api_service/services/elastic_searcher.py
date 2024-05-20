@@ -34,6 +34,9 @@ class ElasticSearcher(AsyncDataStorage):
             body=body,
         )
 
+    async def get_interception(self, index: str, movies: list[str]):
+        ...
+
 
 async def get_es_searcher(
     elastic: AsyncElasticsearch = Depends(get_elastic),

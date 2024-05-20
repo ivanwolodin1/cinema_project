@@ -1,4 +1,5 @@
-from typing import List, Optional
+import uuid
+from typing import List, Optional, Union
 
 from api.v1.models.api_base_model import Base
 from api.v1.models.api_genre_models import Genre
@@ -12,7 +13,13 @@ class FilmBase(Base):
 
 class Film(FilmBase):
     description: str = ''
-    genre: List[Genre] = []
+    genre: Union[str, List[Genre]] = []
     actors: List[PersonBase] = []
     directors: List[PersonBase] = []
     writers: List[PersonBase] = []
+
+
+class EsMovie(Base):
+    uuid: uuid.UUID
+    title: str
+

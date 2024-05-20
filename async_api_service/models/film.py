@@ -1,15 +1,24 @@
-from typing import Optional
-
-from models.base import Base
-from models.genre import Genre
-from models.person import Person
+from pydantic import BaseModel
 
 
-class Film(Base):
+class Actor(BaseModel):
+    id: str
+    name: str
+
+
+class Writer(BaseModel):
+    id: str
+    name: str
+
+
+class Film(BaseModel):
+    id: str
+    imdb_rating: float
+    genre: str
     title: str
-    description: str = ''
-    imdb_rating: Optional[float] = None
-    genre: list[Genre] = []
-    actors: list[Person] = []
-    directors: list[Person] = []
-    writers: list[Person] = []
+    description: str
+    director: str
+    actors_names: list[str]
+    writers_names: list[str]
+    actors: list[Actor]
+    writers: list[Writer]
