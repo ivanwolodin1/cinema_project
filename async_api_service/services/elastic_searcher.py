@@ -5,6 +5,8 @@ from db.elastic import get_elastic
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
 
+from core.elasticsearch_queries import get_interception_query
+
 
 class AsyncDataStorage(ABC):
     @abstractmethod
@@ -32,6 +34,12 @@ class ElasticSearcher(AsyncDataStorage):
         return await self.elastic.search(
             index=index,
             body=body,
+        )
+
+    async def get_interception(self, index: str, movies: list[str]):
+        return await self.elastic.search(
+            index=index,
+            body=get_interception_query(movies),
         )
 
 

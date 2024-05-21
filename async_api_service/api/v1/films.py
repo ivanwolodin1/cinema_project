@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from api.v1.models.api_film_models import Film, FilmBase
+from api.v1.models.api_film_models import Film, FilmBase, EsMovie
 from api.v1.utils.paginated_params import PaginatedParams
 from core.auth_validator import auth_required
 from fastapi import APIRouter, Depends, Header, HTTPException
@@ -42,13 +42,13 @@ async def search_films(
     paginated_params: PaginatedParams = Depends(),
     film_service: FilmService = Depends(get_film_service),
 ) -> list[FilmBase]:
-    if genre_id is not None:
+    if genre_id:
         films = await film_service.get_popular_movies_in_genre(
             genre_id=genre_id,
         )
         return [FilmBase(**film) for film in films]
 
-    elif query is not None:
+    elif query:
         films = await film_service.search_movie(
             query=query,
             page_number=paginated_params.page_number,
@@ -68,9 +68,9 @@ async def search_films(
     description='Полная информация о фильме по ID',
     response_description='ID, название, описание, жанры, рейтинг, список участников',
 )
-@auth_required
+# @auth_required
 async def film_details(
-    authorization_header: str = Header(None),
+    # authorization_header: str = Header(None),
     film_id: str = '',
     film_service: FilmService = Depends(get_film_service),
 ) -> Film:
@@ -81,3 +81,18 @@ async def film_details(
             detail='film not found',
         )
     return Film.parse_raw(film.json())
+
+
+@router.post(
+    '/find_intersection',
+    summary='Возвращает пересечение между поданным списком фильмов и списком в нашем ES',
+    # response_model=list[EsMovie],
+)
+async def find_intersection(
+    movies_list: list[str],
+    film_service: FilmService = Depends(get_film_service),
+):
+    movies_intercepted = await film_service.get_movies_interception(index='movies', movies=movies_list)
+    return {
+        'data': movies_intercepted,
+    }
