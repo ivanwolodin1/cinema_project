@@ -42,13 +42,13 @@ async def search_films(
     paginated_params: PaginatedParams = Depends(),
     film_service: FilmService = Depends(get_film_service),
 ) -> list[FilmBase]:
-    if genre_id is not None:
+    if genre_id:
         films = await film_service.get_popular_movies_in_genre(
             genre_id=genre_id,
         )
         return [FilmBase(**film) for film in films]
 
-    elif query is not None:
+    elif query:
         films = await film_service.search_movie(
             query=query,
             page_number=paginated_params.page_number,
@@ -86,11 +86,13 @@ async def film_details(
 @router.post(
     '/find_intersection',
     summary='Возвращает пересечение между поданным списком фильмов и списком в нашем ES',
-    response_model=list[EsMovie],
+    # response_model=list[EsMovie],
 )
 async def find_intersection(
     movies_list: list[str],
     film_service: FilmService = Depends(get_film_service),
 ):
-    await film_service.get_movies_interception(index='movies', movies=movies_list)
-    return "ok"
+    movies_intercepted = await film_service.get_movies_interception(index='movies', movies=movies_list)
+    return {
+        'data': movies_intercepted,
+    }

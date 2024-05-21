@@ -90,7 +90,14 @@ class FilmService:
 
     @cache_searcher()
     async def get_movies_interception(self, index, movies: list[str]):
-        return await self.storage_searcher.get_interception(index, movies)
+        movies = await self.storage_searcher.get_interception(index, movies)
+        return [
+            {
+                'id': hit['_source']['id'],
+                'title': hit['_source']['title'],
+            }
+            for hit in movies['hits']['hits']
+        ]
 
 
 @lru_cache()

@@ -90,4 +90,25 @@ def get_search_person_query(
     }
 
 
+def get_interception_query(
+        movies: list[str],
+):
+    return {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "terms": {
+                            "title.raw": movies,
+                        }
+                    },
+                    {
+                        "match_all": {}
+                    },
+                ],
+            },
+        },
+    }
+
+
 get_all_query: dict = {'query': {'match_all': {}}}
