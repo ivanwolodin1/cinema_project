@@ -24,3 +24,9 @@ services:
       - "8000"
     ports:
       - "8001:8000"
+  
+  recommendation_service:
+    expose:
+      - "8000"
+    ports:
+      - "8002:8000"

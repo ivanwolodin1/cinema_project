@@ -67,6 +67,23 @@ services:
     build: async_api_service/
     depends_on:
       - etl_es
+  
+  postgres_recommendation:
+    image: postgres:latest
+    container_name: postgres_recommendation
+    build: recommendation_service/database/
+    command: postgres -p 5433
+    env_file:
+      - recommendation_service/example.env
+
+  recommendation_service:
+    container_name: recommendation_service
+    build: recommendation_service/
+    restart: always
+    env_file:
+      - recommendation_service/example.env
+    depends_on:
+      - postgres_recommendation
 
   nginx:
     image: nginx
