@@ -30,3 +30,15 @@ services:
       - "8000"
     ports:
       - "8002:8000"
+
+  like_service:
+    expose:
+      - "8000"
+    ports:
+      - "8005:8000"
+      
+  mongodb:
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"

@@ -3,5 +3,3 @@ Faker
 fastapi==0.110
 uvicorn==0.12.2
 sentry-sdk==1.43.0
-motor==3.3.2
-pyjwt

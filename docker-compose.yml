@@ -101,6 +101,19 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./tmp/logs/nginx/:/var/log/nginx/
+  
+  like_service:
+    container_name: like_api
+    restart: always
+    build: ugc_service/
+    env_file:
+      - ugc_service/test_example.env
+
+  mongodb:
+    image: mongo
+    container_name: mongodb_service
+    env_file:
+      - mongo_example.env
 
   tests_async_api:
     build: async_api_service/tests/
