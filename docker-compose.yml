@@ -84,6 +84,11 @@ services:
       - recommendation_service/example.env
     depends_on:
       - postgres_recommendation
+  
+  scheduler:
+    container_name: scheduler
+    build: scheduled_tasks/
+    
 
   nginx:
     image: nginx
