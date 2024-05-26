@@ -22,6 +22,7 @@ async def get_films(
     paginated_params: PaginatedParams = Depends(),
     film_service: FilmService = Depends(get_film_service),
 ) -> list[FilmBase]:
+    # TODO: сначала запрос в RegSys, если он вернул пустой результат, то запрос ниже
     popular_films = await film_service.get_all(
         page_number=paginated_params.page_number,
         page_size=paginated_params.page_size,

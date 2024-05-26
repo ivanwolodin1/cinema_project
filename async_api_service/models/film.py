@@ -14,11 +14,11 @@ class Writer(BaseModel):
 class Film(BaseModel):
     id: str
     imdb_rating: float
-    genre: str
+    # genre: str
     title: str
-    description: str
-    director: str
-    actors_names: list[str]
-    writers_names: list[str]
-    actors: list[Actor]
-    writers: list[Writer]
+    # description: str
+    # director: str
+    # actors_names: list[str]
+    # writers_names: list[str]
+    # actors: list[Actor]
+    # writers: list[Writer]
