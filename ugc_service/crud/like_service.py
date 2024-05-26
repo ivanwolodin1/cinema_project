@@ -57,4 +57,4 @@ async def fetch_all_likes(db: AsyncIOMotorClient):
         for user_id in users:
             user_data[user_id]['liked_movies'].append(movie_id)
 
-    return user_data
+    return dict(user_data)
