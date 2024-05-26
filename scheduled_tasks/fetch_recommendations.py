@@ -74,4 +74,6 @@ async def main():
         await asyncio.sleep(60)
 
 
-asyncio.run(main())
+if __name__ == '__main__':
+    print("fgo")
+    asyncio.run(main())

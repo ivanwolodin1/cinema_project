@@ -27,3 +27,7 @@ class Settings:
 
 
 settings = Settings()
+AUTH_ROUTE = (
+    f"{os.getenv('AUTH_SERVICE_URL', 'http://auth_service')}:"
+    f"{os.getenv('AUTH_SERVICE_PORT', '8000')}/api/v1/auth/authenticate_user_route"
+)

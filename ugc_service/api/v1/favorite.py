@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-from crud.auth_service import get_current_user
 from crud.favorite_service import add_favorite, get_favorites, remove_favorite
 from db.get_mongo import get_database
 from fastapi import APIRouter, Depends, HTTPException
@@ -22,8 +21,8 @@ async def add_bookmark_endpoint(
 @favoriter.get('/bookmarks/')
 async def get_bookmarks_endpoint(
     db: AsyncIOMotorClient = Depends(get_database),
-    user_id: str = Depends(get_current_user),
 ):
+    user_id = 1
     bookmarks = await get_favorites(user_id, db)
     return {'bookmarks': bookmarks}
 
@@ -31,9 +30,9 @@ async def get_bookmarks_endpoint(
 @favoriter.delete('/bookmark/{movie_id}')
 async def remove_bookmark_endpoint(
     movie_id: int,
-    db: AsyncIOMotorClient = Depends(get_database),
-    user_id: str = Depends(get_current_user),
+    db: AsyncIOMotorClient = Depends(get_database)
 ):
+    user_id = 1
     operation_status = await remove_favorite(user_id, movie_id, db)
     if operation_status == 'Bookmark not found':
         raise HTTPException(

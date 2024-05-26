@@ -96,3 +96,16 @@ async def find_intersection(
     return {
         'data': movies_intercepted,
     }
+
+
+@router.post(
+    '/fetch_titles_by_uuid',
+)
+async def fetch_titles_by_uuid(
+    movies_list: list[str],
+    film_service: FilmService = Depends(get_film_service),
+):
+    movie_names = await film_service.get_movies_by_uuids(index='movies', movies=movies_list)
+    return {
+        'data': movie_names,
+    }

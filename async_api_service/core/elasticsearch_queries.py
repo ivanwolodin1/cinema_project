@@ -111,4 +111,16 @@ def get_interception_query(
     }
 
 
+def titles_by_uuid_query(
+    movies: list[str],
+):
+    return {
+        "query": {
+            "ids": {
+                "values": movies
+                }
+            }
+        }
+
+
 get_all_query: dict = {'query': {'match_all': {}}}
