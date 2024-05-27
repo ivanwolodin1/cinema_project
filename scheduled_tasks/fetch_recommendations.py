@@ -63,7 +63,7 @@ async def main():
 
                 pool = await aiopg.create_pool(**RECOMMENDATIONS_DB_CONFIG)
                 for user_id, user_data in ugc_data.items():
-                    resp = fetch_gigachat_recommendations(session, user_id, user_data)
+                    resp = await fetch_gigachat_recommendations(session, user_id, user_data)
                     # parse response 
                     intersection = await fetch_intersection(session, resp)
                     await update_recommendations_db(pool, user_id, intersection)
@@ -74,7 +74,7 @@ async def main():
             print(e)
             # pool.close()
             # await pool.wait_closed()
-        await asyncio.sleep(60)
+        await asyncio.sleep(10)
 
 
 if __name__ == '__main__':

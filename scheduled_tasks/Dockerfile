@@ -1,9 +1,16 @@
-FROM python:3.11
+FROM python:3.9-slim
+
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /scheduler
+COPY fetch_recommendations.py /app/fetch_recommendations.py
 
-RUN chmod +x /scheduler/start.sh
-CMD [ "/scheduler/start.sh" ]
+WORKDIR /app
+
+RUN chmod +x fetch_recommendations.py
+
+CMD ["python", "-u", "fetch_recommendations.py"]
