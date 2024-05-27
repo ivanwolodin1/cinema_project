@@ -22,6 +22,24 @@
 
 ![plot](architecture.png)
 
+## Контейнеры
+
+Сейчас у нас поднимается через local_run.sh 14 контейнеров (1 тестовый не в счет). 
+Их зона ответственности:
+* etl_transporter - переносит данные из sqllite в PG
+* etl_db - Postgres база для фильмов
+* etl - ETL pipeline
+* etl_es - ElasticSearch со всеми фильмами
+* auth_service - сервис авторизации
+* postgres_auth - БД для сервиса авторизации
+* redis_async_api - Redis для сервиса AsyncAPI, который отдает пользователям данные
+* async_api_service - сам сервис AsyncAPI
+* postgres_recommendation - наш рекомендательный сервис с ручкой, которая возвращает рекомендованные пользователю фильмы
+* scheduler - скрипт, работающий в бесконечном цикле, который ходит в ГигаЧат и кладет результат в базу рекомендательного сервиса
+* nginx
+* like_service - Сервис лайков (UGC)
+* mongodb - NoSQL база для сервиса лайков
+
 ## Шедулер
 
 В данный момент внутри контейнера scheduler в бесконечном цикле крутится скрипт fetch_recommendations.py,
