@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from api.v1.models.api_film_models import Film, FilmBase, EsMovie
 from api.v1.utils.paginated_params import PaginatedParams
+from api.v1.utils.recommendation_api import fetch_recommendations
 from core.auth_validator import auth_required
 from fastapi import APIRouter, Depends, Header, HTTPException
 from services.film_service import FilmService, get_film_service
@@ -22,11 +23,15 @@ async def get_films(
     paginated_params: PaginatedParams = Depends(),
     film_service: FilmService = Depends(get_film_service),
 ) -> list[FilmBase]:
-    popular_films = await film_service.get_all(
-        page_number=paginated_params.page_number,
-        page_size=paginated_params.page_size,
-    )
-    return [FilmBase(**film.dict()) for film in popular_films]
+    suggested_by_gigachat = await fetch_recommendations(user_id=1)
+    if not suggested_by_gigachat:
+        popular_films = await film_service.get_all(
+            page_number=paginated_params.page_number,
+            page_size=paginated_params.page_size,
+        )
+        return [FilmBase(**film.dict()) for film in popular_films]
+    else:
+        return [FilmBase(title=film) for film in suggested_by_gigachat]
 
 
 @router.get(
@@ -95,4 +100,17 @@ async def find_intersection(
     movies_intercepted = await film_service.get_movies_interception(index='movies', movies=movies_list)
     return {
         'data': movies_intercepted,
+    }
+
+
+@router.post(
+    '/fetch_titles_by_uuid',
+)
+async def fetch_titles_by_uuid(
+    movies_list: list[str],
+    film_service: FilmService = Depends(get_film_service),
+):
+    movie_names = await film_service.get_movies_by_uuids(index='movies', movies=movies_list)
+    return {
+        'data': movie_names,
     }

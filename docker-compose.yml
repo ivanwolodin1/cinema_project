@@ -67,7 +67,30 @@ services:
     build: async_api_service/
     depends_on:
       - etl_es
+  
+  postgres_recommendation:
+    image: postgres:latest
+    container_name: postgres_recommendation
+    build: recommendation_service/database/
+    command: postgres -p 5433
+    env_file:
+      - recommendation_service/example.env
 
+  recommendation_service:
+    container_name: recommendation_service
+    build: recommendation_service/
+    restart: always
+    env_file:
+      - recommendation_service/example.env
+    depends_on:
+      - postgres_recommendation
+  
+  scheduler:
+    container_name: scheduler
+    build: scheduled_tasks/
+    volumes:
+      - ./scheduled_tasks/fetch_recommendations.py:/app/fetch_recommendations.py
+    
   nginx:
     image: nginx
     container_name: nginx
@@ -79,6 +102,19 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./tmp/logs/nginx/:/var/log/nginx/
+  
+  like_service:
+    container_name: like_api
+    restart: always
+    build: ugc_service/
+    env_file:
+      - ugc_service/test_example.env
+
+  mongodb:
+    image: mongo
+    container_name: mongodb_service
+    env_file:
+      - mongo_example.env
 
   tests_async_api:
     build: async_api_service/tests/
