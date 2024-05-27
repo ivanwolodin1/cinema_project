@@ -25,6 +25,8 @@ def auth_required(func):
                 },
             ) as response:
                 if response.status == HTTPStatus.OK:
+                    data = await response.json()
+                    print(f'token_data={data}')
                     return await func(*args, **kwargs)
                 raise HTTPException(
                     status_code=HTTPStatus.UNAUTHORIZED,

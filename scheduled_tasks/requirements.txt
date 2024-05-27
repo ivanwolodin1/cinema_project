@@ -1,2 +1,9 @@
 aiohttp
 aiopg
+orjson==3.9.15
+backoff==2.2.1
+pydantic==2.6.3
+pydantic-settings==2.2.1
+gigachain
+gigachat
+langchain-community

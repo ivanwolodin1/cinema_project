@@ -89,7 +89,7 @@ services:
     container_name: scheduler
     build: scheduled_tasks/
     volumes:
-      - ./scheduled_tasks/fetch_recommendations.py:/scheduler/fetch_recommendations.py
+      - ./scheduled_tasks/fetch_recommendations.py:/app/fetch_recommendations.py
     
   nginx:
     image: nginx
