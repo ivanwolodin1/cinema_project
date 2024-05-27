@@ -25,7 +25,6 @@ async def set_like_or_dislike(
 ):
     user_id = "1"
     res = await set_like(user_id, like_data, db)
-    print(f"res={res}")
     if res is None:
         return {'message': 'Like is not added', 'status': 'Fail', 'res': None}
     return {'message': 'Like is added', 'status': 'Success', 'res': json.dumps(res)}

@@ -19,7 +19,6 @@ class RecommendationService:
                 ).where(Recommendation.user_id == user_id)).one()
             session.expunge(res)
             return res
-            # return session.db.query(Recommendation).get(user_id)
 
 
 @lru_cache()

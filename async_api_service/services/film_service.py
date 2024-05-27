@@ -102,7 +102,6 @@ class FilmService:
     @cache_searcher()
     async def get_movies_by_uuids(self, index, movies: list[str]):
         movies = await self.storage_searcher.get_movies_by_uuids(index, movies)
-        print(f'movies={movies}')
         return [hit['_source']['title'] for hit in movies['hits']['hits']]
 
 

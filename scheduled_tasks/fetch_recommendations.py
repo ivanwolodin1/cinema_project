@@ -39,9 +39,7 @@ async def fetch_ugc_data(session):
 
 
 async def fetch_titles_by_uuid(session, movies_list):
-    print(f'movies={movies_list}')
     async with session.post(ASYNC_API_URL_TITLE_BY_UUIDS, json=movies_list) as response:
-        print(f'resp={response}')
         return await response.json()
 
 

@@ -14,7 +14,7 @@ recommendation_router = APIRouter()
     "/recommendation/{user_id}", response_model=RecommendationResponse
 )
 async def recommendation(
-        user_id: UUID,
+        user_id: int,
         rec_service: RecommendationService = Depends(get_rec_service)
 ):
     try:
